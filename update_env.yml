@@ -1,0 +1,21 @@
+me: ldak_env  # You can change this to your environment name
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - plink=1.90  
+  - r-base=4.2       # or match your current version
+  - r-devtools
+  - r-optparse
+  - r-data.table     # install again for dependencies; will be overwritten by source install
+  - r-dplyr
+  - r-rcpp
+  - r-plyr
+  - r-matrixstats
+  - r-zoo
+  - r-tidyverse      # optional but helpful
+  - libgfortran
+  - make
+  - gcc
+  - wget
+

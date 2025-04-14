@@ -1,0 +1,8 @@
+
+CondaError: Run 'conda init' before 'conda activate'
+
+Merging chromosomes...
+/var/spool/slurm/d/job7839379/slurm_script: line 65: 233256 Killed                  plink --bfile "${OUTPUT_DIR}/1_filtered" --merge-list "${OUTPUT_DIR}/mergefile.txt" --make-bed --out "${OUTPUT_DIR}/data_filtered"
+Done!
+→ Merged PLINK data: /home/cpahnke/TrioGWAS/input/data_filtered.{bed,bim,fam}
+slurmstepd: error: Detected 1 oom_kill event in StepId=7839379.batch. Some of the step tasks have been OOM Killed.

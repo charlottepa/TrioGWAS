@@ -1,0 +1,96 @@
+#!/bin/bash
+#SBATCH --job-name=Trio_GWAS_merge
+#SBATCH --output=Trio_GWAS_merge.out
+#SBATCH --error=Trio_GWAS_merge.err
+#SBATCH --partition=long
+#SBATCH --time=2-00:00:00
+#SBATCH --account=ag_ukihg_forstner
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=48G
+
+conda init
+conda activate ldak_env  
+
+#set -euo pipefail
+
+INPUT_DIR="/home/cpahnke/GT_data/bgen_bed"
+OUTPUT_DIR="/home/cpahnke/TrioGWAS/input"
+
+#mkdir -p "$OUTPUT_DIR"
+
+# Step 1: Reformat .bim and handle duplicates
+#for chr in {1..22} X; do
+#  echo "Processing chromosome $chr..."
+#
+#  cp "${INPUT_DIR}/${chr}.bim" "${OUTPUT_DIR}/${chr}.bim.orig"
+#  cp "${INPUT_DIR}/${chr}.bed" "${OUTPUT_DIR}/${chr}.bed"
+#  cp "${INPUT_DIR}/${chr}.fam" "${OUTPUT_DIR}/${chr}.fam"
+
+#  awk -v chr=$chr '{
+#    if (($5 == "A" || $5 == "T" || $5 == "C" || $5=="G") && ($6 == "A" || $6 == "T" || $6 == "C" || $6=="G"))
+#      print $1, "chr"chr":"$4":SNP", $3, $4, $5, $6;
+#    else
+#      print $1, "chr"chr":"$4":INDEL", $3, $4, $5, $6;
+#  }' "${OUTPUT_DIR}/${chr}.bim.orig" > "${OUTPUT_DIR}/${chr}.bim"
+#
+#  awk '{
+#    if (++dup[$2] > 1) {
+#      print $1, $2".duplicate."dup[$2], $3, $4, $5, $6;
+#    } else {
+#      print $0;
+#    }
+#  }' "${OUTPUT_DIR}/${chr}.bim.orig" > "${OUTPUT_DIR}/${chr}.bim"
+#
+#  grep "duplicate" "${OUTPUT_DIR}/${chr}.bim" | awk '{print $2}' > "${OUTPUT_DIR}/duplicates.chr${chr}.txt" || true
+
+#  if [ -s "${OUTPUT_DIR}/duplicates.chr${chr}.txt" ]; then
+#    echo "Running PLINK to exclude duplicates for chr $chr..."
+#    plink --bfile "${OUTPUT_DIR}/${chr}" \
+#          --exclude "${OUTPUT_DIR}/duplicates.chr${chr}.txt" \
+#          --make-bed \
+#          --out "${OUTPUT_DIR}/${chr}_filtered"
+#  else
+#    echo "No duplicates in chr $chr, just renaming..."
+#    cp "${OUTPUT_DIR}/${chr}.bed" "${OUTPUT_DIR}/${chr}_filtered.bed"
+#    cp "${OUTPUT_DIR}/${chr}.bim" "${OUTPUT_DIR}/${chr}_filtered.bim"
+#    cp "${OUTPUT_DIR}/${chr}.fam" "${OUTPUT_DIR}/${chr}_filtered.fam"
+#  fi
+#done
+
+# Step 2: Merge all chromosomes
+#echo "Creating merge list..."
+#ls ${OUTPUT_DIR}/*_filtered.bed | sed 's/.bed//' | grep -v "1_filtered" > "${OUTPUT_DIR}/mergefile.txt"
+
+echo "Merging chromosomes..."
+plink --bfile "${OUTPUT_DIR}/1_filtered" \
+      --merge-list "${OUTPUT_DIR}/mergefile.txt" \
+      --make-bed \
+      --out "${OUTPUT_DIR}/data_filtered"
+
+# Step 3: Build INFO files
+#echo "Creating INFO file..."
+#> "${OUTPUT_DIR}/all_chromosomes.info"
+
+#for chr in {1..22} X; do
+#  SNP_STATS="${INPUT_DIR}/${chr}.snp-stats"
+#  INFO_OUT="${OUTPUT_DIR}/data_chr${chr}.info"
+
+#  if [[ -f "$SNP_STATS" ]]; then
+#    awk -v chr=$chr '{
+#      if (($5 == "A" || $5 == "T" || $5 == "C" || $5=="G") && ($6 == "A" || $6 == "T" || $6 == "C" || $6=="G"))
+#        print "chr"chr":"$4":SNP", $14, $17;
+#      else
+#        print "chr"chr":"$4":INDEL", $14, $17;
+#    }' "$SNP_STATS" > "$INFO_OUT"
+
+#    awk '!seen[$1]++' "$INFO_OUT" >> "${OUTPUT_DIR}/all_chromosomes.info"
+#  else
+#    echo "Warning: Missing snp-stats file for chr $chr"
+#  fi
+#done
+
+echo "Done!"
+echo "→ Merged PLINK data: $OUTPUT_DIR/data_filtered.{bed,bim,fam}"
+#echo "→ Combined INFO file: $OUTPUT_DIR/all_chromosomes.info"
+

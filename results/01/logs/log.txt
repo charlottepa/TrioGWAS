@@ -1,0 +1,77 @@
+-----------------------------------------------
+
+config section
+
+to run this part on its own type:
+$ ./1.0setup.sh config
+
+-----------------------------------------------
+
+
+The study name 'TwinLife' will be used for this analysis. Change this in the config file if necessary.
+
+-----------------------------------------------
+
+requirements section
+
+to run this part on its own type:
+$ ./1.0setup.sh requirements
+
+-----------------------------------------------
+
+
+Checking R version
+Checking that all required packages are present
+-----------------------------------------------
+
+genetics section
+
+to run this part on its own type:
+$ ./1.0setup.sh genetics
+
+-----------------------------------------------
+
+
+Checking bim file: /home/cpahnke/TrioGWAS//input/data_filtered.bim
+Number of SNPs: 21183658
+Warning: All variants must be labelled in the following format. e.g. chr1:10177:INDEL
+   CHR    Freq
+1    1 1710576
+2    2 1899149
+3    3 1607047
+4    4 1596889
+5    5 1461367
+6    6 1479468
+7    7 1282148
+8    8 1259308
+9    9  944511
+10  10 1092738
+11  12 1055502
+12  13  811226
+13  14  713770
+14  15  616677
+15  16  665140
+16  17  564389
+17  18  621206
+18  19  444222
+19  20  475321
+20  22  273146
+21  23  609858
+Warning message:
+ERROR: Please change chromosome coding to 1-23, please dont use chr1, chr2, X etc. 
+Checking strand
+Checking strand against control SNPs
+Chr 1 proportion in agreement: 1
+Chr 2 proportion in agreement: 1
+Chr 3 proportion in agreement: 1
+Chr 4 proportion in agreement: 1
+Chr 5 proportion in agreement: 1
+Chr 6 proportion in agreement: 1
+Chr 7 proportion in agreement: 1
+Chr 8 proportion in agreement: 1
+Chr 9 proportion in agreement: 1
+Chr 10 proportion in agreement: 1
+Chr 11 proportion in agreement: NaN
+Error in if (strand.check < 0.75) { : 
+  missing value where TRUE/FALSE needed
+Execution halted
